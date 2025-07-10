@@ -1,0 +1,23 @@
+
+
+# Baixar GeoJSON manualmente ou usar arquivo externo
+geojson_url = "https://raw.githubusercontent.com/codeforamerica/click_that_hood/master/public/data/brazil-states.geojson"
+import requests, json
+geojson = requests.get(geojson_url).json()
+
+# Dados prontos para mapa
+df_estado_plot = df_estado.reset_index()
+
+fig = px.choropleth(
+    df_estado_plot,
+    geojson=geojson,
+    locations="SG_UF",
+    featureidkey="properties.sigla",
+    color="TOTAL_MATRICULAS",
+    hover_name="NO_UF",
+    color_continuous_scale="YlGnBu",
+    title="Matrículas em Cursos Técnicos por Estado - 2024"
+)
+fig.update_geos(fitbounds="locations", visible=False)
+fig.show()
+fig.write_html("mapa_matriculas.html")
